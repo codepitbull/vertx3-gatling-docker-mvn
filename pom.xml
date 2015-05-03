@@ -80,38 +80,76 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>-->
+                <!--<groupId>io.gatling</groupId>-->
+                <!--<artifactId>gatling-maven-plugin</artifactId>-->
+                <!--<version>${gatling-plugin.version}</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--&lt;!&ndash; default, can be omitted &ndash;&gt;-->
+                        <!--<phase>integration-test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>execute</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
             <plugin>
-                <groupId>io.gatling</groupId>
-                <artifactId>gatling-maven-plugin</artifactId>
-                <version>${gatling-plugin.version}</version>
+                <groupId>org.jolokia</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.11.3</version>
+
+                <configuration>
+                    <images>
+                        <image>
+                            <registry>192.168.50.4:5000</registry>
+                            <name>tester/test-fat</name>
+                            <build>
+                                <from>java:8</from>
+                                <command>java -jar /maven/target/${project.build.finalName}-fat.jar</command>
+                                <tags>
+                                    <tag>latest</tag>
+                                </tags>
+                                <!-- The assembly descriptor prepares the "/maven" directory in the temporary data
+                                   container which will be made available to the specified container. The startup script in the
+                                   container (jolokia/tomcat-7.0) should check for files in this directory and use them
+                                   for deploying them. I.e. this image has a script 'deploy-and-run.sh' which exactly
+                                   does this. -->
+                                <assembly>
+                                    <descriptor>assembly.xml</descriptor>
+                                </assembly>
+                            </build>
+                        </image>
+                    </images>
+                    <authConfig>
+                        <username>test</username>
+                        <password>test</password>
+                    </authConfig>
+                </configuration>
+
+                <!-- Connect start/stop to pre- and
+                     post-integration-test phase, respectively if you want to start
+                     your docker containers during integration tests -->
                 <executions>
                     <execution>
-                        <!-- default, can be omitted -->
-                        <phase>integration-test</phase>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>execute</goal>
+                            <!-- "build" should be used to create the images with the
+                                 artefacts -->
+                            <goal>build</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.2.6</version>
-                <configuration>
-                    <imageName>example</imageName>
-                    <baseImage>java:8</baseImage>
-                    <entryPoint>["java", "-jar", "/${project.build.finalName}-fat.jar"]</entryPoint>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}-fat.jar</include>
-                        </resource>
-                    </resources>
-                </configuration>
             </plugin>
         </plugins>
 

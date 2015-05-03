@@ -1,36 +1,35 @@
-= Vert.x 3.0 Simple Gradle Verticle project
+= Install Docker in Vagrant image (autmate this!)
+wget -qO- https://get.docker.com/ | sh
+sudo usermod -aG docker vagrant
 
-This project is very similar to the gradle-simplest project but instead of embedding Vert.x it shows an example
-of writing the code as a verticle.
+docker run -d example:latest
 
-You can run it directly in your IDE by creating a run configuration that uses the main class `io.vertx.core.Starter`
-and passes in the arguments `run io.vertx.example.HelloWorldVerticle`.
+#!/bin/bash
+# Delete all containers
+docker rm $(docker ps -a -q)
+# Delete all images
+docker rmi $(docker images -q)
 
-The build.gradle uses the Gradle shadowJar plugin to assemble the application and all it's dependencies into a single "fat" jar.
 
-To build the "fat jar"
+= Create Private Registry and a User
+https://www.vultr.com/docs/setup-your-own-docker-registry-on-coreos
 
-    ./gradlew shadowJar
+docker pull registry
+docker run -p 5000:5000 -d --name=basic_registry registry
+docker login 192.168.50.4:5000 (give username: test password:test)
 
-To run the fat jar:
+# Add insecure registry (required to use it from other hosts)
+https://github.com/boot2docker/boot2docker
 
-    java -jar build/libs/gradle-verticle-3.0.0-SNAPSHOT-fat.jar
+$ boot2docker ssh
+$ sudo vi /var/lib/boot2docker/profile
+EXTRA_ARGS="--insecure-registry 192.168.50.4:5000"
+$ sudo /etc/init.d/docker restart
 
-(You can take that jar and run it anywhere there is a Java 8+ JDK. It contains all the dependencies it needs so you
-don't need to install Vert.x on the target machine).
 
-Now point your browser at http://localhost:8080
+# Jenkins
+install ssh jenkins plugin
 
-Writing code in verticles allow you to scale it more easily, e.g. let's say you have 8 cores on your server and you
-want to utilise them all, you can deploy 8 instances as follows:
-
-java -jar build/libs/gradle-verticle-3.0.0-SNAPSHOT-fat.jar -instances 8
-
-You can also enable clustering and ha at the command line, e.g.
-
-java -jar build/libs/gradle-verticle-3.0.0-SNAPSHOT-fat.jar -cluster
-
-java -jar build/libs/gradle-verticle-3.0.0-SNAPSHOT-fat.jar -ha
-
-Please see the docs for a full list of Vert.x command line options.
-
+# SEARCH
+mvn clean install docker:build docker:push
+docker search 192.168.50.4:5000/tester
