@@ -1,23 +1,3 @@
-= Install Docker in Vagrant image (autmate this!)
-wget -qO- https://get.docker.com/ | sh
-sudo usermod -aG docker vagrant
-
-docker run -d example:latest
-
-#!/bin/bash
-# Delete all containers
-docker rm $(docker ps -a -q)
-# Delete all images
-docker rmi $(docker images -q)
-
-
-= Create Private Registry and a User
-https://www.vultr.com/docs/setup-your-own-docker-registry-on-coreos
-
-docker pull registry
-docker run -p 5000:5000 -d --name=basic_registry registry
-docker login 192.168.50.4:5000 (give username: test password:test)
-
 # Add insecure registry (required to use it from other hosts)
 https://github.com/boot2docker/boot2docker
 
@@ -28,8 +8,8 @@ $ sudo /etc/init.d/docker restart
 
 
 # Jenkins
-install ssh jenkins plugin
-
+install ssh plugin
+install EnvInject plugin
 # SEARCH
 mvn clean install docker:build docker:push
 docker search 192.168.50.4:5000/tester

@@ -101,6 +101,7 @@
                 <version>0.11.3</version>
 
                 <configuration>
+                    <dockerHost>tcp://192.168.59.103:2376</dockerHost>
                     <images>
                         <image>
                             <registry>192.168.50.4:5000</registry>
