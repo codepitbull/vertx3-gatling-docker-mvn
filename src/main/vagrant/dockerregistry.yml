@@ -1,0 +1,7 @@
+---
+- hosts: all
+  sudo: true
+  tasks:
+    - apt: name=expect state=present
+    - copy: src=createuser.sh dest=/tmp/createuser.sh owner=vagrant group=vagrant mode=0744
+    - command: /tmp/createuser.sh
