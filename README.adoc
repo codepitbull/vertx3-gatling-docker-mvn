@@ -8,8 +8,16 @@ $ sudo /etc/init.d/docker restart
 
 
 # Jenkins
-install ssh plugin
+install SSH plugin
 install EnvInject plugin
+install Build Flow plugin
+install Port Allocator plugin
 # SEARCH
 mvn clean install docker:build docker:push
 docker search 192.168.50.4:5000/tester
+
+# EXEC
+docker kill tester
+docker rm tester
+docker pull 127.0.0.1:5000/tester/test-fat
+docker run -p 8087:8087 -d --name tester 127.0.0.1:5000/tester/test-fat:latest
