@@ -2,22 +2,35 @@
 https://github.com/boot2docker/boot2docker
 
 $ boot2docker ssh
+
 $ sudo vi /var/lib/boot2docker/profile
-EXTRA_ARGS="--insecure-registry 192.168.50.4:5000"
+    (add EXTRA_ARGS="--insecure-registry 192.168.50.4:5000")
+
 $ sudo /etc/init.d/docker restart
 
-
 # Jenkins
+
 install SSH plugin
+
 install EnvInject plugin
+
 install Build Flow plugin
+
 install Port Allocator plugin
+
 # SEARCH
+
 mvn clean install docker:build docker:push
+
 docker search 192.168.50.4:5000/tester
 
 # EXEC
+
 docker kill tester
+
 docker rm tester
+
 docker pull 127.0.0.1:5000/tester/test-fat
+
 docker run -p 8087:8087 -d --name tester 127.0.0.1:5000/tester/test-fat:latest
+
