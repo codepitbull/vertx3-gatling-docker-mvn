@@ -14,9 +14,6 @@ install SSH plugin
 
 install EnvInject plugin
 
-install Build Flow plugin VS install Workflow: Aggregator plugin
-
-
 install Port Allocator plugin
 
 # SEARCH
