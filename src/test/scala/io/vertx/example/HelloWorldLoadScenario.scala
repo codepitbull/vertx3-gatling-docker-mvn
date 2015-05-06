@@ -13,7 +13,7 @@ class HelloWorldLoadScenario extends Simulation {
   val target = if (System.getenv("TEST_TARGET") != null) System.getenv("TEST_TARGET") else "127.0.0.1"
 
   val httpConf = http
-    .baseURL("http://"+target+":8087")
+    .baseURL("http://"+target+":8088")
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .doNotTrackHeader("1")
     .acceptLanguageHeader("en-US,en;q=0.5")
@@ -27,5 +27,10 @@ class HelloWorldLoadScenario extends Simulation {
 
   setUp(
     scn.inject(atOnceUsers(1))
-  ).protocols(httpConf)
+  )
+    .protocols(httpConf)
+    .assertions(
+      global.responseTime.max.lessThan(50),
+      global.successfulRequests.percent.greaterThan(95)
+    )
 }
