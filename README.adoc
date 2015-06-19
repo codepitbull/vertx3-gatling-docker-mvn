@@ -1,28 +1,48 @@
 # Add insecure registry (required to use it from other hosts)
-https://github.com/boot2docker/boot2docker
+Taken from link:https://github.com/boot2docker/boot2docker[https://github.com/boot2docker/boot2docker]
 
-$ boot2docker ssh
+Log into boot2docker using *boot2docke ssh*
 
-$ sudo vi /var/lib/boot2docker/profile
-    (add EXTRA_ARGS="--insecure-registry 192.168.50.4:5000")
+Edit the profile using * sudo vi /var/lib/boot2docker/profile*
 
-$ sudo /etc/init.d/docker restart
+add *EXTRA_ARGS="--insecure-registry 192.168.50.4:5000"*
+
+The restart docker *sudo /etc/init.d/docker restart*
+
+#Vagrant
+Switch to _src/main/vagrant_ and do *vagrant up*
+
+This will start a docker registry and add a default account.
 
 # Jenkins
+Switch to _src/main/jenkins_ and do *./docker.sh*
 
-install SSH plugin
+The script will stop at some point and you will have to access your running link:http://192.168.59.103:8080/[Jenkins] to
+do some manual configuration. Sadly these things can't be automated right now :(
 
-install EnvInject plugin
+## Add Maven
+Go to link:http://192.168.59.103:8080/configure[global configuration] and select a Maven installation.
 
-install Port Allocator plugin
+## Add ssh remote host
+Go to link:http://192.168.59.103:8080/configure[global configuration] and add an SSH remote host.
 
-# SEARCH
+.Jenkins input fields
+image:ssh-config.png[
+"Screenshot",width=128,
+link="ssh-config.png"]
+
+After that you can continue by pressing any key. Now the build job is being created and you are good to go.
+
+
+# Things you can try after the first build
+
+## SEARCH
 
 mvn clean install docker:build docker:push
 
 docker search 192.168.50.4:5000/tester
 
-# EXEC
+## EXEC
 
 docker kill tester
 
