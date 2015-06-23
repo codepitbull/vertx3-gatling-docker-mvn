@@ -3,7 +3,6 @@ package io.vertx.example
 import io.gatling.core.scenario.Simulation
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import scala.concurrent.duration._
 
 /**
  * Created by jmader on 29.04.15.
