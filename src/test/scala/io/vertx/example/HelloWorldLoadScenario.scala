@@ -9,7 +9,8 @@ import io.gatling.http.Predef._
  */
 class HelloWorldLoadScenario extends Simulation {
 
-  val target = if (System.getenv("TEST_TARGET") != null) System.getenv("TEST_TARGET") else "127.0.0.1"
+  val target = if (System.getenv("TEST_TARGET") != null)
+    System.getenv("TEST_TARGET") else "127.0.0.1"
 
   val httpConf = http
     .baseURL("http://"+target+":8087")
@@ -22,7 +23,6 @@ class HelloWorldLoadScenario extends Simulation {
   val scn = scenario("BasicSimulation")
     .exec(http("request_1")
     .get("/"))
-    .pause(5)
 
   setUp(
     scn.inject(atOnceUsers(1))

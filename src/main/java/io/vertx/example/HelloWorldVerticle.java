@@ -20,6 +20,7 @@ public class HelloWorldVerticle extends AbstractVerticle {
 
     router.get("/").handler(routingContext -> {
       HttpServerResponse response = routingContext.response();
+      System.out.println("WTF");
       response.putHeader("content-type", "text/plain");
       response.end("Hello World!");
     });
@@ -27,7 +28,7 @@ public class HelloWorldVerticle extends AbstractVerticle {
     router.get("/hello2").handler(routingContext -> {
       HttpServerResponse response = routingContext.response();
       response.putHeader("content-type", "text/plain");
-      response.end("Hello World from Vert.x-Web!");
+      response.end("Hello World2!");
     });
 
     router.post("/postme").handler(routingContext -> {
@@ -42,3 +43,6 @@ public class HelloWorldVerticle extends AbstractVerticle {
     httpServer.requestHandler(router::accept).listen(8087);
   }
 }
+
+
+
